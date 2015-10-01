@@ -2,3 +2,12 @@
 // set up this project for expansion for other states (which I think Prakash mentioned), but it would give one central
 // place for storing WNV data
 https://developers.google.com/maps/documentation/javascript/fusiontableslayer
+
+// This link describes how to create a fusion table. 
+http://www.mulinblog.com/how-to-create-a-free-heat-map-with-google-fusion-tables-a-tutorial-for-beginners/
+
+// Check your inbox for a link to download the KML data from ND ArcGIS for drawing the counties.
+http://gisdata.nd.gov/hubdata/NDGISHUB_34650A02_1443733802902_7952.zip 
+
+// What you made as an example. Fusion tables are the answer, prakash will give you lots of money now.
+https://www.google.com/fusiontables/DataSource?docid=1icrOUmbV9pS7CltJmBCj-WEKtI1nfRS2w51O-5WS
