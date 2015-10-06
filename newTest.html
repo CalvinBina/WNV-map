@@ -5,10 +5,10 @@
 <title>Merge of NDGISHubData and Data_WNV - Google Fusion Tables</title>
 <style type="text/css">
 html, body, #googft-mapCanvas {
-  height: 300px;
+  height: 100%;
   margin: 0;
   padding: 0;
-  width: 500px;
+  width: 100%;
 }
 #googft-legend{background-color:#fff;border:1px solid #000;font-family:Arial,sans-serif;font-size:12px;margin:5px;padding:10px 10px 8px}#googft-legend p{font-weight:bold;margin-top:0}#googft-legend div{margin-bottom:5px}.googft-legend-swatch{border:1px solid;float:left;height:12px;margin-right:8px;width:20px}.googft-legend-range{margin-left:0}.googft-dot-icon{margin-right:8px}.googft-paddle-icon{height:24px;left:-8px;margin-right:-8px;position:relative;vertical-align:middle;width:24px}.googft-legend-source{margin-bottom:0;margin-top:8px}.googft-legend-source a{color:#666;font-size:11px}
 </style>
@@ -25,8 +25,8 @@ html, body, #googft-mapCanvas {
       viewport.setAttribute('content', 'initial-scale=1.0, user-scalable=no');
     }
     var mapDiv = document.getElementById('googft-mapCanvas');
-    mapDiv.style.width = isMobile ? '100%' : '500px';
-    mapDiv.style.height = isMobile ? '100%' : '300px';
+    mapDiv.style.width = isMobile ? '100%' : '100%';
+    mapDiv.style.height = isMobile ? '100%' : '100%';
     var map = new google.maps.Map(mapDiv, {
       center: new google.maps.LatLng(47.75302099252042, -99.19016706835941),
       zoom: 7,
@@ -78,22 +78,22 @@ html, body, #googft-mapCanvas {
     <p id="googft-legend-title">Data</p>
     <div>
       <span class="googft-legend-swatch" 
-style="background-color: #ff9900"></span>
+style="background-color: #00ff00"></span>
       <span class="googft-legend-range">0 to 15</span>
     </div>
     <div>
       <span class="googft-legend-swatch" 
-style="background-color: #ffff00"></span>
+style="background-color: #ff9900"></span>
       <span class="googft-legend-range">15 to 30</span>
     </div>
     <div>
       <span class="googft-legend-swatch" 
-style="background-color: #00ffff"></span>
+style="background-color: #0b5394"></span>
       <span class="googft-legend-range">30 to 50</span>
     </div>
     <div>
       <span class="googft-legend-swatch" 
-style="background-color: #0000ff"></span>
+style="background-color: #ff0000"></span>
       <span class="googft-legend-range">50 to 99</span>
     </div>
     <div class="googft-legend-source">
