@@ -27,12 +27,21 @@ function initMap() {
 
   var layer = new google.maps.FusionTablesLayer({
     query: {
-      select: 'location',
-      from: '1xWyeuAhIFK_aED1ikkQEGmR8mINSCJO9Vq-BPQ'
+      select: 'geometry',
+      from: '1icrOUmbV9pS7CltJmBCj-WEKtI1nfRS2w51O-5WS'
     },
-    heatmap: {
-      enabled: true
-    }
+    styles: [{
+      where: '2003 < 15'
+      polygonOptions: {
+        fillColor: '#ff9900',
+        fillOpacity: 0.3
+      }
+    }, {
+      where: '2003 > 15',
+      polygonOptions: {
+        fillColor: '#ffff00'
+      }
+    }]
   });
 
   layer.setMap(map);
