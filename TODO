@@ -1,0 +1,54 @@
+make the interface look better, and separate the data charts and the data map
+    - DONE
+
+figure out how to fine grain the data to month
+    - just need to rework the scripts
+    - need to provide a function that takes the spreadsheets in THAT FORMAT and automatically appends
+        the data extracted to the fusion table.
+
+add the data from TPW_FORMATTED and UPDATED_DATA_2 spreadsheets
+
+finish up the county highlighting 
+    - change it up so that there is a "None" option in the county dropdowns for the graphs
+    - need to change up the method for choosing the county
+
+fix the synchronous call for clicking the county - works alright for now
+
+explore options for customizing graphs for data
+
+------------------------------------
+
+switch up options, move county dropdown to graphs - done
+
+add option to display polygons for whole state, otherwise just show polygons for selected counties
+
+use RawData/Data Separated Sheets/ T P W Formatted file 
+
+maybe make it look better - added a background, put this on backburner
+
+do that polygon click update thing from last week
+
+implement multiple county options - done
+
+look up more options for displaying graphs, maybe get it done by popping up a new tab
+
+LAST WEEK STUFF
+-------------------------------------------------
+highlight county - not possible with fusion tables layer, not exposed in the API, can only apply styles to all polygons, infowindow points to county
+    in other words - not feasible, unfortunately
+
+get stations count displayed - DONE
+    it is not optimal, since we are doing a synchronous ajax call to get the json data, which blocks the webpage. Might need to
+    dream up a better way of doing this, but I have a feeling that it might require reworking a lot
+    IDEA - maybe with updateLayerQuery, have it do the synchronous ajax call once, store the JSON data in a var? that
+        way there isn't a call happening with every click
+
+reduce totals by month - need to rework the database, and rework the scripts
+
+multiple graph comparisons - get some divs for now, add dropdowns of county, have none option. In the future, this can have nice styles to it,
+    like having it automatically center on the screen based on # of graphs, sliding animations, disappearing divs, or something like all that
+
+get max count for styling the map by species by year (by query) - DONE, works good
+
+get data for rainfall, temperature, and dead birds, match to time - I think i found rainfall and temp data by month by station - going to have to turn this into 
+    data organized by year, and WAY more cleaned up

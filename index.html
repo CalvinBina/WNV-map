@@ -1,611 +1,654 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Heatmaps</title>
-    <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #map {
-        height: 100%;
-      }
-#floating-panel {
-  position: absolute;
-  top: 10px;
-  left: 25%;
-  z-index: 5;
-  background-color: #fff;
-  padding: 5px;
-  border: 1px solid #999;
-  text-align: center;
-  font-family: 'Roboto','sans-serif';
-  line-height: 30px;
-  padding-left: 10px;
-}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/ico/favicon.png">
 
-      #floating-panel {
-        background-color: #fff;
-        border: 1px solid #999;
-        left: 25%;
-        padding: 5px;
-        position: absolute;
-        top: 10px;
-        z-index: 5;
-      }
-    </style>
+    <title>MARCO - One Page Bootstrap 3 Theme</title>
+
+    <link href="assets/css/hover_pack.css" rel="stylesheet">
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="assets/css/main.css" rel="stylesheet">
+    <link href="assets/css/colors/color-74c9be.css" rel="stylesheet">    
+    <link href="assets/css/animations.css" rel="stylesheet">
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+    
+    
+    <!-- JavaScripts needed at the beginning
+    ================================================== -->
+   <!-- I don't think we need this...
+   <script type="text/javascript" src="http://alvarez.is/demo/marco/assets/js/twitterFetcher_v10_min.js"></script>
+   -->
+
+    <!-- MAP SCRIPT - ALL CONFIGURATION IS PLACED HERE - VIEW OUR DOCUMENTATION FOR FURTHER INFORMATION -->
+
+    <!-- POTENTIALLY IMPORTANT - the javascript loaded in the line below is the Google Maps Javascript API.
+    This should really get loaded from Google's servers on page load, but I saved it locally to speed up page
+    load for development. Change the src to https://www.google.com/jsapi to load it from Google instead. 
+    This ensures you get the most up to date version.
+    ------------------------------------------------------------------------------------------------------>
+    <script type="text/javascript" src="jsapi.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <!-- Javascript for map functions and charts -->
+    <script type="text/javascript" src="map.js"></script>
+    <!-- Javascript for layer styles -->
+    <script type="text/javascript" src="vars.js"></script>
+    <script type="text/javascript">
+        google.load('visualization', '1', { packages: ['corechart'] });
+        // When the window has finished loading create our google map below
+        google.maps.event.addDomListener(window, 'load', initialize);
+    
+        function init() {
+            // Basic options for a simple Google Map
+            // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
+            var mapOptions = {
+                // How zoomed in you want the map to start at (always required)
+                zoom: 11,
+                
+                scrollwheel: false,
+
+                // The latitude and longitude to center the map (always required)
+                center: new google.maps.LatLng(40.6700, -73.9400), // New York
+
+                // How you would like to style the map. 
+                // This is where you would paste any style found on Snazzy Maps.
+                styles: [	{		featureType:'water',		stylers:[{color:'#74c9be'},{visibility:'on'}]	},{		featureType:'landscape',		stylers:[{color:'#f2f2f2'}]	},{		featureType:'road',		stylers:[{saturation:-100},{lightness:45}]	},{		featureType:'road.highway',		stylers:[{visibility:'simplified'}]	},{		featureType:'road.arterial',		elementType:'labels.icon',		stylers:[{visibility:'off'}]	},{		featureType:'administrative',		elementType:'labels.text.fill',		stylers:[{color:'#444444'}]	},{		featureType:'transit',		stylers:[{visibility:'off'}]	},{		featureType:'poi',		stylers:[{visibility:'off'}]	}]
+            };
+
+            // Get the HTML DOM element that will contain your map 
+            // We are using a div with id="map" seen below in the <body>
+            var mapElement = document.getElementById('nd-map');
+
+            // Create the Google Map using out element and options defined above
+            var map = new google.maps.Map(mapElement, mapOptions);
+        }
+    </script>
+    
+    
+    <!-- Main Jquery & Hover Effects. Should load first -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="assets/js/hover_pack.js"></script>
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
-    <div id="floating-panel">
-      <button onclick="toggleHeatmap()">Toggle Heatmap</button>
-      <button onclick="changeGradient()">Change gradient</button>
-      <button onclick="changeRadius()">Change radius</button>
-      <button onclick="changeOpacity()">Change opacity</button>
-    </div>
-    <div id="map"></div>
-    <script>
 
-var map, heatmap;
 
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 7,
-    center: {lat: 47.581, lng: -100.424},
-    mapTypeId: google.maps.MapTypeId.HYBRID
-  });
+	<! ========== HEADERWRAP ==================================================================================================== 
+	=============================================================================================================================>
+    <div id="headerwrap">
+    	<div class="container" style="height:500px">
+			<div id="nd-map" class="row centered" style="height:500px">
+                <!-- Original demo html
+				<div class="col-lg-8 col-lg-offset-2 mt">
+					<h1 class="animation slideDown">We are a digital creative agency. We focus on design, consulting, and technology.</h1>
+    				<p class="mt"><button type="button" class="btn btn-cta btn-lg">LEARN MORE</button></p>
+				</div>
+                -->
+			</div><!-- /row -->
+            <form id="map-options">
+                <div>
+                  <label>Year</label>
+                  <select id="year">
+                    <option value="2015">2015</option>
+                    <option value="2014">2014</option>
+                    <option value="2013">2013</option>
+                    <option value="2012">2012</option>
+                    <option value="2011">2011</option>
+                    <option value="2010">2010</option>
+                    <option value="2009">2009</option>
+                    <option value="2008">2008</option>
+                    <option value="2007">2007</option>
+                    <option value="2006">2006</option>
+                  </select>
+              </div>
+              <div>
+                  <label>Species</label>
+                  <select id="species">
+                      <option value="tmale">Total Male</option>
+                      <option value="tfemale">Total Female</option>
+                      <option value="Culiseta">Culiseta</option>
+                      <option value="Anopheles">Anopheles</option>
+                      <option value="Aedes">Aedes</option>
+                      <option value="Aedes_vexans">Aedes Vexans</option>
+                      <option value="Culex">Culex</option>
+                      <option value="Culex_Tarsalis">Culex Tarsalis</option>
+                      <option value="Culex_salinarius">Culex Salinarius</option>
+                      <option value="Other">Other</option>
+                  </select>
+              </div>
+              <div>
+                  <label>Display entire state</label>
+                  <input type="checkbox" id="entire_state" checked="true" />
+              </div>
+            </form>
+    	</div><!-- /container -->
+    </div> <!-- /headerwrap -->
 
-  heatmap = new google.maps.visualization.HeatmapLayer({
-    data: getPoints(),
-    map: map
-  });
-}
+	<! ========== BLOG POSTS ==================================================================================================== 
+	=============================================================================================================================>    
+	<div class="container">	
 
-function toggleHeatmap() {
-  heatmap.setMap(heatmap.getMap() ? null : map);
-}
+		<div class="row mt centered ">
+			<div class="col-lg-4 col-lg-offset-4">
+				<h3>Charts & Visualizations</h3>
+				<hr>
+			</div>
+		</div><!-- /row -->
 
-function changeGradient() {
-  var gradient = [
-    'rgba(0, 255, 255, 0)',
-    'rgba(0, 255, 255, 1)',
-    'rgba(0, 191, 255, 1)',
-    'rgba(0, 127, 255, 1)',
-    'rgba(0, 63, 255, 1)',
-    'rgba(0, 0, 255, 1)',
-    'rgba(0, 0, 223, 1)',
-    'rgba(0, 0, 191, 1)',
-    'rgba(0, 0, 159, 1)',
-    'rgba(0, 0, 127, 1)',
-    'rgba(63, 0, 91, 1)',
-    'rgba(127, 0, 63, 1)',
-    'rgba(191, 0, 31, 1)',
-    'rgba(255, 0, 0, 1)'
-  ]
-  heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
-}
+        <!-- County Options - needs to be cleaned up! -->
+        <div class="row mt">
+          <div class="col-lg-4">
+              <label>County One:</label>
+              <select id="countyOne">
+              </select>
+          </div>
+          <div class="col-lg-4">
+              <label>County Two:</label>
+              <select id="countyTwo">
+              </select>
+          </div>
+          <div class="col-lg-4">
+              <label>County Three:</label>
+              <select id="countyThree">
+              </select>
+          </div>
+        </div>
 
-function changeRadius() {
-  heatmap.set('radius', heatmap.get('radius') ? null : 20);
-}
+        <!-- Visualizations -->
+		<div class="row mt">
+			<div class="col-lg-4 col-md-4 col-xs-12 desc">
+                <div id="visualization1"></div>
+			</div><!-- col-lg-4 -->
+			
+			<div class="col-lg-4 col-md-4 col-xs-12 desc">
+                <div id="visualization2"></div>
+			</div><!-- col-lg-4 -->
+			
+			<div class="col-lg-4 col-md-4 col-xs-12 desc">
+                <div id="visualization3"></div>
+			</div><!-- col-lg-4 -->
+			
+		</div><!-- /row -->
+	</div><!-- /container -->
+	
+	<! ========== CALL TO ACTION 1 ============================================================================================== 
+	=============================================================================================================================>    
+    <div id="cta01">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-lg-8 col-lg-offset-2">
+    				<h2>The probability of success is difficult to estimate;<br/>but if we never search, the chance of success is zero.</h2>
+    				<button type="button" class="btn btn-cta btn-lg">LEARN MORE</button>
+    			</div>
+    		</div><!-- /row -->
+    	</div><!-- /container -->
+    </div><! --/cta01 -->
 
-function changeOpacity() {
-  heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
-}
+	<! ========== PORTFOLIO SECTION ============================================================================================= 
+	=============================================================================================================================>    
+	<div class="container">
+		<div class="row mt centered ">
+			<div class="col-lg-4 col-lg-offset-4">
+				<h3>Our Latest Work</h3>
+				<hr>
+			</div>
+		</div><!-- /row -->
+		<div class="row mt centered">	
+			<div class="col-lg-4 desc">
+				<a class="b-link-fade b-animate-go" href="#"><img width="350" src="assets/img/portfolio/port01.jpg" alt="" />
+					<div class="b-wrapper">
+					  	<h4 class="b-from-left b-animate b-delay03">Project 1</h4>
+					  	<p class="b-from-right b-animate b-delay03">View Details</p>
+					</div>
+				</a>
+				<p>APE - <i class="fa fa-heart-o"></i></p>
+			</div>
+			<div class="col-lg-4 desc">
+				<a class="b-link-fade b-animate-go" href="#"><img width="350" src="assets/img/portfolio/port02.jpg" alt="" />
+					<div class="b-wrapper">
+					  	<h4 class="b-from-left b-animate b-delay03">Project 2</h4>
+					  	<p class="b-from-right b-animate b-delay03">View Details</p>
+					</div>
+				</a>
+				<p>RAIDERS - <i class="fa fa-heart-o"></i></p>
+			</div>
+			<div class="col-lg-4 desc">
+				<a class="b-link-fade b-animate-go" href="#"><img width="350" src="assets/img/portfolio/port03.jpg" alt="" />
+					<div class="b-wrapper">
+					  	<h4 class="b-from-left b-animate b-delay03">Project 3</h4>
+					  	<p class="b-from-right b-animate b-delay03">View Details</p>
+					</div>
+				</a>
+				<p>VIKINGS - <i class="fa fa-heart-o"></i></p>
+			</div>
+		</div><!-- /row -->
+		<div class="row mt centered">	
+			<div class="col-lg-4 desc">
+				<a class="b-link-fade b-animate-go" href="#"><img width="350" src="assets/img/portfolio/port03.jpg" alt="" />
+					<div class="b-wrapper">
+					  	<h4 class="b-from-left b-animate b-delay03">Project 4</h4>
+					  	<p class="b-from-right b-animate b-delay03">View Details</p>
+					</div>
+				</a>
+				<p>APE - <i class="fa fa-heart-o"></i></p>
+			</div>
+			<div class="col-lg-4 desc">
+				<a class="b-link-fade b-animate-go" href="#"><img width="350" src="assets/img/portfolio/port01.jpg" alt="" />
+					<div class="b-wrapper">
+					  	<h4 class="b-from-left b-animate b-delay03">Project 5</h4>
+					  	<p class="b-from-right b-animate b-delay03">View Details</p>
+					</div>
+				</a>
+				<p>RAIDERS - <i class="fa fa-heart-o"></i></p>
+			</div>
+			<div class="col-lg-4 desc">
+				<a class="b-link-fade b-animate-go" href="#"><img width="350" src="assets/img/portfolio/port02.jpg" alt="" />
+					<div class="b-wrapper">
+					  	<h4 class="b-from-left b-animate b-delay03">Project 6</h4>
+					  	<p class="b-from-right b-animate b-delay03">View Details</p>
+					</div>
+				</a>
+				<p>VIKINGS - <i class="fa fa-heart-o"></i></p>
+			</div>
+		</div><!-- /row -->
 
-// Heatmap data: 500 Points
-function getPoints() {
-  return [
-    new google.maps.LatLng(47.782551, -100.445368),
-    new google.maps.LatLng(47.782745, -100.444586),
-    new google.maps.LatLng(47.782842, -100.443688),
-    new google.maps.LatLng(47.782919, -100.442815),
-    new google.maps.LatLng(47.782992, -100.442112),
-    new google.maps.LatLng(47.783100, -100.441461),
-    new google.maps.LatLng(47.783206, -100.440829),
-    new google.maps.LatLng(47.783273, -100.440324),
-    new google.maps.LatLng(47.783316, -100.440023),
-    new google.maps.LatLng(47.783357, -100.439794),
-    new google.maps.LatLng(47.783371, -100.439687),
-    new google.maps.LatLng(47.783368, -100.439666),
-    new google.maps.LatLng(47.783383, -100.439594),
-    new google.maps.LatLng(47.783508, -100.439525),
-    new google.maps.LatLng(47.783842, -100.439591),
-    new google.maps.LatLng(47.784147, -100.439668),
-    new google.maps.LatLng(47.784206, -100.439686),
-    new google.maps.LatLng(47.784386, -100.439790),
-    new google.maps.LatLng(47.784701, -100.439902),
-    new google.maps.LatLng(47.784965, -100.439938),
-    new google.maps.LatLng(47.785010, -100.439947),
-    new google.maps.LatLng(47.785360, -100.439952),
-    new google.maps.LatLng(47.785715, -100.440030),
-    new google.maps.LatLng(47.786117, -100.440119),
-    new google.maps.LatLng(47.786564, -100.440209),
-    new google.maps.LatLng(47.786905, -100.440270),
-    new google.maps.LatLng(47.786956, -100.440279),
-    new google.maps.LatLng(47.800224, -100.433520),
-    new google.maps.LatLng(47.800155, -100.434101),
-    new google.maps.LatLng(47.800160, -100.434430),
-    new google.maps.LatLng(47.800378, -100.434527),
-    new google.maps.LatLng(47.800738, -100.434598),
-    new google.maps.LatLng(47.800938, -100.434650),
-    new google.maps.LatLng(47.801024, -100.434889),
-    new google.maps.LatLng(47.800955, -100.435392),
-    new google.maps.LatLng(47.800886, -100.435959),
-    new google.maps.LatLng(47.800811, -100.436275),
-    new google.maps.LatLng(47.800788, -100.436299),
-    new google.maps.LatLng(47.800719, -100.436302),
-    new google.maps.LatLng(47.800702, -100.436298),
-    new google.maps.LatLng(47.800661, -100.436273),
-    new google.maps.LatLng(47.800395, -100.436172),
-    new google.maps.LatLng(47.800228, -100.436116),
-    new google.maps.LatLng(47.800169, -100.436130),
-    new google.maps.LatLng(47.800066, -100.436167),
-    new google.maps.LatLng(47.784345, -100.422922),
-    new google.maps.LatLng(47.784389, -100.422926),
-    new google.maps.LatLng(47.784437, -100.422924),
-    new google.maps.LatLng(47.784746, -100.422818),
-    new google.maps.LatLng(47.785436, -100.422959),
-    new google.maps.LatLng(47.786120, -100.423112),
-    new google.maps.LatLng(47.786433, -100.423029),
-    new google.maps.LatLng(47.786631, -100.421213),
-    new google.maps.LatLng(47.786660, -100.421033),
-    new google.maps.LatLng(47.786801, -100.420141),
-    new google.maps.LatLng(47.786823, -100.420034),
-    new google.maps.LatLng(47.786831, -100.419916),
-    new google.maps.LatLng(47.787034, -100.418208),
-    new google.maps.LatLng(47.787056, -100.418034),
-    new google.maps.LatLng(47.787169, -100.417145),
-    new google.maps.LatLng(47.787217, -100.416715),
-    new google.maps.LatLng(47.786144, -100.416403),
-    new google.maps.LatLng(47.785292, -100.416257),
-    new google.maps.LatLng(47.780666, -100.390374),
-    new google.maps.LatLng(47.780501, -100.391281),
-    new google.maps.LatLng(47.780148, -100.392052),
-    new google.maps.LatLng(47.780173, -100.391148),
-    new google.maps.LatLng(47.780693, -100.390592),
-    new google.maps.LatLng(47.781261, -100.391142),
-    new google.maps.LatLng(47.781808, -100.391730),
-    new google.maps.LatLng(47.782340, -100.392341),
-    new google.maps.LatLng(47.782812, -100.393022),
-    new google.maps.LatLng(47.783300, -100.393672),
-    new google.maps.LatLng(47.783809, -100.394275),
-    new google.maps.LatLng(47.784246, -100.394979),
-    new google.maps.LatLng(47.784791, -100.395958),
-    new google.maps.LatLng(47.785675, -100.396746),
-    new google.maps.LatLng(47.786262, -100.395780),
-    new google.maps.LatLng(47.786776, -100.395093),
-    new google.maps.LatLng(47.787282, -100.394426),
-    new google.maps.LatLng(47.787783, -100.393767),
-    new google.maps.LatLng(47.788343, -100.393184),
-    new google.maps.LatLng(47.788895, -100.392506),
-    new google.maps.LatLng(47.789371, -100.391701),
-    new google.maps.LatLng(47.789722, -100.390952),
-    new google.maps.LatLng(47.790315, -100.390305),
-    new google.maps.LatLng(47.790738, -100.389616),
-    new google.maps.LatLng(47.779448, -100.438702),
-    new google.maps.LatLng(47.779023, -100.438585),
-    new google.maps.LatLng(47.778542, -100.438492),
-    new google.maps.LatLng(47.778100, -100.438411),
-    new google.maps.LatLng(47.777986, -100.438376),
-    new google.maps.LatLng(47.777680, -100.438313),
-    new google.maps.LatLng(47.777316, -100.438273),
-    new google.maps.LatLng(47.777135, -100.438254),
-    new google.maps.LatLng(47.776987, -100.438303),
-    new google.maps.LatLng(47.776946, -100.438404),
-    new google.maps.LatLng(47.776944, -100.438467),
-    new google.maps.LatLng(47.776892, -100.438459),
-    new google.maps.LatLng(47.776842, -100.438442),
-    new google.maps.LatLng(47.776822, -100.438391),
-    new google.maps.LatLng(47.776814, -100.438412),
-    new google.maps.LatLng(47.776787, -100.438628),
-    new google.maps.LatLng(47.776729, -100.438650),
-    new google.maps.LatLng(47.776759, -100.438677),
-    new google.maps.LatLng(47.776772, -100.438498),
-    new google.maps.LatLng(47.776787, -100.438389),
-    new google.maps.LatLng(47.776848, -100.438283),
-    new google.maps.LatLng(47.776870, -100.438239),
-    new google.maps.LatLng(47.777015, -100.438198),
-    new google.maps.LatLng(47.777333, -100.438256),
-    new google.maps.LatLng(47.777595, -100.438308),
-    new google.maps.LatLng(47.777797, -100.438344),
-    new google.maps.LatLng(47.778160, -100.438442),
-    new google.maps.LatLng(47.778414, -100.438508),
-    new google.maps.LatLng(47.778445, -100.438516),
-    new google.maps.LatLng(47.778503, -100.438529),
-    new google.maps.LatLng(47.778607, -100.438549),
-    new google.maps.LatLng(47.778670, -100.438644),
-    new google.maps.LatLng(47.778847, -100.438706),
-    new google.maps.LatLng(47.779240, -100.438744),
-    new google.maps.LatLng(47.779738, -100.438822),
-    new google.maps.LatLng(47.780201, -100.438882),
-    new google.maps.LatLng(47.780400, -100.438905),
-    new google.maps.LatLng(47.780501, -100.438921),
-    new google.maps.LatLng(47.780892, -100.438986),
-    new google.maps.LatLng(47.781446, -100.439087),
-    new google.maps.LatLng(47.781985, -100.439199),
-    new google.maps.LatLng(47.782239, -100.439249),
-    new google.maps.LatLng(47.782286, -100.439266),
-    new google.maps.LatLng(47.797847, -100.429388),
-    new google.maps.LatLng(47.797874, -100.429180),
-    new google.maps.LatLng(47.797885, -100.429069),
-    new google.maps.LatLng(47.797887, -100.429050),
-    new google.maps.LatLng(47.797933, -100.428954),
-    new google.maps.LatLng(47.798242, -100.428990),
-    new google.maps.LatLng(47.798617, -100.429075),
-    new google.maps.LatLng(47.798719, -100.429092),
-    new google.maps.LatLng(47.798944, -100.429145),
-    new google.maps.LatLng(47.799320, -100.429251),
-    new google.maps.LatLng(47.799590, -100.429309),
-    new google.maps.LatLng(47.799677, -100.429324),
-    new google.maps.LatLng(47.799966, -100.429360),
-    new google.maps.LatLng(47.800288, -100.429430),
-    new google.maps.LatLng(47.800443, -100.429461),
-    new google.maps.LatLng(47.800465, -100.429474),
-    new google.maps.LatLng(47.800644, -100.429540),
-    new google.maps.LatLng(47.800948, -100.429620),
-    new google.maps.LatLng(47.801242, -100.429685),
-    new google.maps.LatLng(47.801375, -100.429702),
-    new google.maps.LatLng(47.801400, -100.429703),
-    new google.maps.LatLng(47.801453, -100.429707),
-    new google.maps.LatLng(47.801473, -100.429709),
-    new google.maps.LatLng(47.801532, -100.429707),
-    new google.maps.LatLng(47.801852, -100.429729),
-    new google.maps.LatLng(47.802173, -100.429789),
-    new google.maps.LatLng(47.802459, -100.429847),
-    new google.maps.LatLng(47.802554, -100.429825),
-    new google.maps.LatLng(47.802647, -100.429549),
-    new google.maps.LatLng(47.802693, -100.429179),
-    new google.maps.LatLng(47.802729, -100.428751),
-    new google.maps.LatLng(47.766104, -100.409291),
-    new google.maps.LatLng(47.766103, -100.409268),
-    new google.maps.LatLng(47.766138, -100.409229),
-    new google.maps.LatLng(47.766183, -100.409231),
-    new google.maps.LatLng(47.766153, -100.409276),
-    new google.maps.LatLng(47.766005, -100.409365),
-    new google.maps.LatLng(47.765897, -100.409570),
-    new google.maps.LatLng(47.765767, -100.409739),
-    new google.maps.LatLng(47.765693, -100.410389),
-    new google.maps.LatLng(47.765615, -100.411201),
-    new google.maps.LatLng(47.765533, -100.412121),
-    new google.maps.LatLng(47.765467, -100.412939),
-    new google.maps.LatLng(47.765444, -100.414821),
-    new google.maps.LatLng(47.765444, -100.414964),
-    new google.maps.LatLng(47.765318, -100.415424),
-    new google.maps.LatLng(47.763961, -100.415296),
-    new google.maps.LatLng(47.763115, -100.415196),
-    new google.maps.LatLng(47.762967, -100.415183),
-    new google.maps.LatLng(47.762278, -100.415127),
-    new google.maps.LatLng(47.761675, -100.415055),
-    new google.maps.LatLng(47.760932, -100.414988),
-    new google.maps.LatLng(47.759337, -100.414862),
-    new google.maps.LatLng(47.773187, -100.421922),
-    new google.maps.LatLng(47.773043, -100.422118),
-    new google.maps.LatLng(47.773007, -100.422165),
-    new google.maps.LatLng(47.772979, -100.422219),
-    new google.maps.LatLng(47.772865, -100.422394),
-    new google.maps.LatLng(47.772779, -100.422503),
-    new google.maps.LatLng(47.772676, -100.422701),
-    new google.maps.LatLng(47.772606, -100.422806),
-    new google.maps.LatLng(47.772566, -100.422840),
-    new google.maps.LatLng(47.772508, -100.422852),
-    new google.maps.LatLng(47.772387, -100.423011),
-    new google.maps.LatLng(47.772099, -100.423328),
-    new google.maps.LatLng(47.771704, -100.423783),
-    new google.maps.LatLng(47.771481, -100.424081),
-    new google.maps.LatLng(47.771400, -100.424179),
-    new google.maps.LatLng(47.771352, -100.424220),
-    new google.maps.LatLng(47.771248, -100.424327),
-    new google.maps.LatLng(47.770904, -100.424781),
-    new google.maps.LatLng(47.770520, -100.425283),
-    new google.maps.LatLng(47.770337, -100.425553),
-    new google.maps.LatLng(47.770128, -100.425832),
-    new google.maps.LatLng(47.769756, -100.426331),
-    new google.maps.LatLng(47.769300, -100.426902),
-    new google.maps.LatLng(47.769132, -100.427065),
-    new google.maps.LatLng(47.769092, -100.427103),
-    new google.maps.LatLng(47.768979, -100.427172),
-    new google.maps.LatLng(47.768595, -100.427634),
-    new google.maps.LatLng(47.768372, -100.427913),
-    new google.maps.LatLng(47.768337, -100.427961),
-    new google.maps.LatLng(47.768244, -100.428138),
-    new google.maps.LatLng(47.767942, -100.428581),
-    new google.maps.LatLng(47.767482, -100.429094),
-    new google.maps.LatLng(47.767031, -100.429606),
-    new google.maps.LatLng(47.766732, -100.429986),
-    new google.maps.LatLng(47.766680, -100.430058),
-    new google.maps.LatLng(47.766633, -100.430109),
-    new google.maps.LatLng(47.766580, -100.430211),
-    new google.maps.LatLng(47.766367, -100.430594),
-    new google.maps.LatLng(47.765910, -100.431137),
-    new google.maps.LatLng(47.765353, -100.431806),
-    new google.maps.LatLng(47.764962, -100.432298),
-    new google.maps.LatLng(47.764868, -100.432486),
-    new google.maps.LatLng(47.764518, -100.432913),
-    new google.maps.LatLng(47.763435, -100.434173),
-    new google.maps.LatLng(47.762847, -100.434953),
-    new google.maps.LatLng(47.762291, -100.435935),
-    new google.maps.LatLng(47.762224, -100.436074),
-    new google.maps.LatLng(47.761957, -100.436892),
-    new google.maps.LatLng(47.761652, -100.438886),
-    new google.maps.LatLng(47.761284, -100.439955),
-    new google.maps.LatLng(47.761210, -100.440068),
-    new google.maps.LatLng(47.761064, -100.440720),
-    new google.maps.LatLng(47.761040, -100.441411),
-    new google.maps.LatLng(47.761048, -100.442324),
-    new google.maps.LatLng(47.760851, -100.443118),
-    new google.maps.LatLng(47.759977, -100.444591),
-    new google.maps.LatLng(47.759913, -100.444698),
-    new google.maps.LatLng(47.759623, -100.445065),
-    new google.maps.LatLng(47.758902, -100.445158),
-    new google.maps.LatLng(47.758428, -100.444570),
-    new google.maps.LatLng(47.757687, -100.443340),
-    new google.maps.LatLng(47.757583, -100.443240),
-    new google.maps.LatLng(47.757019, -100.442787),
-    new google.maps.LatLng(47.756603, -100.442322),
-    new google.maps.LatLng(47.756380, -100.441602),
-    new google.maps.LatLng(47.755790, -100.441382),
-    new google.maps.LatLng(47.754493, -100.442133),
-    new google.maps.LatLng(47.754361, -100.442206),
-    new google.maps.LatLng(47.753719, -100.442650),
-    new google.maps.LatLng(47.753096, -100.442915),
-    new google.maps.LatLng(47.751617, -100.443211),
-    new google.maps.LatLng(47.751496, -100.443246),
-    new google.maps.LatLng(47.750733, -100.443428),
-    new google.maps.LatLng(47.750126, -100.443536),
-    new google.maps.LatLng(47.750103, -100.443784),
-    new google.maps.LatLng(47.750390, -100.444010),
-    new google.maps.LatLng(47.750448, -100.444013),
-    new google.maps.LatLng(47.750536, -100.444040),
-    new google.maps.LatLng(47.750493, -100.444141),
-    new google.maps.LatLng(47.790859, -100.402808),
-    new google.maps.LatLng(47.790864, -100.402768),
-    new google.maps.LatLng(47.790995, -100.402539),
-    new google.maps.LatLng(47.791148, -100.402172),
-    new google.maps.LatLng(47.791385, -100.401312),
-    new google.maps.LatLng(47.791405, -100.400776),
-    new google.maps.LatLng(47.791288, -100.400528),
-    new google.maps.LatLng(47.791113, -100.400441),
-    new google.maps.LatLng(47.791027, -100.400395),
-    new google.maps.LatLng(47.791094, -100.400311),
-    new google.maps.LatLng(47.791211, -100.400183),
-    new google.maps.LatLng(47.791060, -100.399334),
-    new google.maps.LatLng(47.790538, -100.398718),
-    new google.maps.LatLng(47.790095, -100.398086),
-    new google.maps.LatLng(47.789644, -100.397360),
-    new google.maps.LatLng(47.789254, -100.396844),
-    new google.maps.LatLng(47.788855, -100.396397),
-    new google.maps.LatLng(47.788483, -100.395963),
-    new google.maps.LatLng(47.788015, -100.395365),
-    new google.maps.LatLng(47.787558, -100.394735),
-    new google.maps.LatLng(47.787472, -100.394323),
-    new google.maps.LatLng(47.787630, -100.394025),
-    new google.maps.LatLng(47.787767, -100.393987),
-    new google.maps.LatLng(47.787486, -100.394452),
-    new google.maps.LatLng(47.786977, -100.395043),
-    new google.maps.LatLng(47.786583, -100.395552),
-    new google.maps.LatLng(47.786540, -100.395610),
-    new google.maps.LatLng(47.786516, -100.395659),
-    new google.maps.LatLng(47.786378, -100.395707),
-    new google.maps.LatLng(47.786044, -100.395362),
-    new google.maps.LatLng(47.785598, -100.394715),
-    new google.maps.LatLng(47.785321, -100.394361),
-    new google.maps.LatLng(47.785207, -100.394236),
-    new google.maps.LatLng(47.785751, -100.394062),
-    new google.maps.LatLng(47.785996, -100.393881),
-    new google.maps.LatLng(47.786092, -100.393830),
-    new google.maps.LatLng(47.785998, -100.393899),
-    new google.maps.LatLng(47.785114, -100.394365),
-    new google.maps.LatLng(47.785022, -100.394441),
-    new google.maps.LatLng(47.784823, -100.394635),
-    new google.maps.LatLng(47.784719, -100.394629),
-    new google.maps.LatLng(47.785069, -100.394176),
-    new google.maps.LatLng(47.785500, -100.393650),
-    new google.maps.LatLng(47.785770, -100.393291),
-    new google.maps.LatLng(47.785839, -100.393159),
-    new google.maps.LatLng(47.782651, -100.400628),
-    new google.maps.LatLng(47.782616, -100.400599),
-    new google.maps.LatLng(47.782702, -100.400470),
-    new google.maps.LatLng(47.782915, -100.400192),
-    new google.maps.LatLng(47.783137, -100.399887),
-    new google.maps.LatLng(47.783414, -100.399519),
-    new google.maps.LatLng(47.783629, -100.399237),
-    new google.maps.LatLng(47.783688, -100.399157),
-    new google.maps.LatLng(47.783716, -100.399106),
-    new google.maps.LatLng(47.783798, -100.399072),
-    new google.maps.LatLng(47.783997, -100.399186),
-    new google.maps.LatLng(47.784271, -100.399538),
-    new google.maps.LatLng(47.784577, -100.399948),
-    new google.maps.LatLng(47.784828, -100.400260),
-    new google.maps.LatLng(47.784999, -100.400477),
-    new google.maps.LatLng(47.785113, -100.400651),
-    new google.maps.LatLng(47.785155, -100.400703),
-    new google.maps.LatLng(47.785192, -100.400749),
-    new google.maps.LatLng(47.785278, -100.400839),
-    new google.maps.LatLng(47.785387, -100.400857),
-    new google.maps.LatLng(47.785478, -100.400890),
-    new google.maps.LatLng(47.785526, -100.401022),
-    new google.maps.LatLng(47.785598, -100.401148),
-    new google.maps.LatLng(47.785631, -100.401202),
-    new google.maps.LatLng(47.785660, -100.401267),
-    new google.maps.LatLng(47.803986, -100.426035),
-    new google.maps.LatLng(47.804102, -100.425089),
-    new google.maps.LatLng(47.804211, -100.424156),
-    new google.maps.LatLng(47.803861, -100.423385),
-    new google.maps.LatLng(47.803151, -100.423214),
-    new google.maps.LatLng(47.802439, -100.423077),
-    new google.maps.LatLng(47.801740, -100.422905),
-    new google.maps.LatLng(47.801069, -100.422785),
-    new google.maps.LatLng(47.800345, -100.422649),
-    new google.maps.LatLng(47.799633, -100.422603),
-    new google.maps.LatLng(47.799750, -100.421700),
-    new google.maps.LatLng(47.799885, -100.420854),
-    new google.maps.LatLng(47.799209, -100.420607),
-    new google.maps.LatLng(47.795656, -100.400395),
-    new google.maps.LatLng(47.795203, -100.400304),
-    new google.maps.LatLng(47.778738, -100.415584),
-    new google.maps.LatLng(47.778812, -100.415189),
-    new google.maps.LatLng(47.778824, -100.415092),
-    new google.maps.LatLng(47.778833, -100.414932),
-    new google.maps.LatLng(47.778834, -100.414898),
-    new google.maps.LatLng(47.778740, -100.414757),
-    new google.maps.LatLng(47.778501, -100.414433),
-    new google.maps.LatLng(47.778182, -100.414026),
-    new google.maps.LatLng(47.777851, -100.413623),
-    new google.maps.LatLng(47.777486, -100.413166),
-    new google.maps.LatLng(47.777109, -100.412674),
-    new google.maps.LatLng(47.776743, -100.412186),
-    new google.maps.LatLng(47.776440, -100.411800),
-    new google.maps.LatLng(47.776295, -100.411614),
-    new google.maps.LatLng(47.776158, -100.411440),
-    new google.maps.LatLng(47.775806, -100.410997),
-    new google.maps.LatLng(47.775422, -100.410484),
-    new google.maps.LatLng(47.775126, -100.410087),
-    new google.maps.LatLng(47.775012, -100.409854),
-    new google.maps.LatLng(47.775164, -100.409573),
-    new google.maps.LatLng(47.775498, -100.409180),
-    new google.maps.LatLng(47.775868, -100.408730),
-    new google.maps.LatLng(47.776256, -100.408240),
-    new google.maps.LatLng(47.776519, -100.407928),
-    new google.maps.LatLng(47.776539, -100.407904),
-    new google.maps.LatLng(47.776595, -100.407854),
-    new google.maps.LatLng(47.776853, -100.407547),
-    new google.maps.LatLng(47.777234, -100.407087),
-    new google.maps.LatLng(47.777644, -100.406558),
-    new google.maps.LatLng(47.778066, -100.406017),
-    new google.maps.LatLng(47.778468, -100.405499),
-    new google.maps.LatLng(47.778866, -100.404995),
-    new google.maps.LatLng(47.779295, -100.404455),
-    new google.maps.LatLng(47.779695, -100.403950),
-    new google.maps.LatLng(47.779982, -100.403584),
-    new google.maps.LatLng(47.780295, -100.403223),
-    new google.maps.LatLng(47.780664, -100.402766),
-    new google.maps.LatLng(47.781043, -100.402288),
-    new google.maps.LatLng(47.781399, -100.401823),
-    new google.maps.LatLng(47.781727, -100.401407),
-    new google.maps.LatLng(47.781853, -100.401247),
-    new google.maps.LatLng(47.781894, -100.401195),
-    new google.maps.LatLng(47.782076, -100.400977),
-    new google.maps.LatLng(47.782338, -100.400603),
-    new google.maps.LatLng(47.782666, -100.400133),
-    new google.maps.LatLng(47.783048, -100.399634),
-    new google.maps.LatLng(47.783450, -100.399198),
-    new google.maps.LatLng(47.783791, -100.398998),
-    new google.maps.LatLng(47.784177, -100.398959),
-    new google.maps.LatLng(47.784388, -100.398971),
-    new google.maps.LatLng(47.784404, -100.399128),
-    new google.maps.LatLng(47.784586, -100.399524),
-    new google.maps.LatLng(47.784835, -100.399927),
-    new google.maps.LatLng(47.785116, -100.400307),
-    new google.maps.LatLng(47.785282, -100.400539),
-    new google.maps.LatLng(47.785346, -100.400692),
-    new google.maps.LatLng(47.765769, -100.407201),
-    new google.maps.LatLng(47.765790, -100.407414),
-    new google.maps.LatLng(47.765802, -100.407755),
-    new google.maps.LatLng(47.765791, -100.408219),
-    new google.maps.LatLng(47.765763, -100.408759),
-    new google.maps.LatLng(47.765726, -100.409348),
-    new google.maps.LatLng(47.765716, -100.409882),
-    new google.maps.LatLng(47.765708, -100.410202),
-    new google.maps.LatLng(47.765705, -100.410253),
-    new google.maps.LatLng(47.765707, -100.410369),
-    new google.maps.LatLng(47.765692, -100.410720),
-    new google.maps.LatLng(47.765699, -100.411215),
-    new google.maps.LatLng(47.765687, -100.411789),
-    new google.maps.LatLng(47.765666, -100.412373),
-    new google.maps.LatLng(47.765598, -100.412883),
-    new google.maps.LatLng(47.765543, -100.413039),
-    new google.maps.LatLng(47.765532, -100.413125),
-    new google.maps.LatLng(47.765500, -100.413553),
-    new google.maps.LatLng(47.765448, -100.414053),
-    new google.maps.LatLng(47.765388, -100.414645),
-    new google.maps.LatLng(47.765323, -100.415250),
-    new google.maps.LatLng(47.765303, -100.415847),
-    new google.maps.LatLng(47.765251, -100.416439),
-    new google.maps.LatLng(47.765204, -100.417020),
-    new google.maps.LatLng(47.765172, -100.417556),
-    new google.maps.LatLng(47.765164, -100.418075),
-    new google.maps.LatLng(47.765153, -100.418618),
-    new google.maps.LatLng(47.765136, -100.419112),
-    new google.maps.LatLng(47.765129, -100.419378),
-    new google.maps.LatLng(47.765119, -100.419481),
-    new google.maps.LatLng(47.765100, -100.419852),
-    new google.maps.LatLng(47.765083, -100.420349),
-    new google.maps.LatLng(47.765045, -100.420930),
-    new google.maps.LatLng(47.764992, -100.421481),
-    new google.maps.LatLng(47.764980, -100.421695),
-    new google.maps.LatLng(47.764993, -100.421843),
-    new google.maps.LatLng(47.764986, -100.422255),
-    new google.maps.LatLng(47.764975, -100.422823),
-    new google.maps.LatLng(47.764939, -100.423411),
-    new google.maps.LatLng(47.764902, -100.424014),
-    new google.maps.LatLng(47.764853, -100.424576),
-    new google.maps.LatLng(47.764826, -100.424922),
-    new google.maps.LatLng(47.764796, -100.425375),
-    new google.maps.LatLng(47.764782, -100.425869),
-    new google.maps.LatLng(47.764768, -100.426089),
-    new google.maps.LatLng(47.764766, -100.426117),
-    new google.maps.LatLng(47.764723, -100.426276),
-    new google.maps.LatLng(47.764681, -100.426649),
-    new google.maps.LatLng(47.782012, -100.404200),
-    new google.maps.LatLng(47.781574, -100.404911),
-    new google.maps.LatLng(47.781055, -100.405597),
-    new google.maps.LatLng(47.780479, -100.406341),
-    new google.maps.LatLng(47.779996, -100.406939),
-    new google.maps.LatLng(47.779459, -100.407613),
-    new google.maps.LatLng(47.778953, -100.408228),
-    new google.maps.LatLng(47.778409, -100.408839),
-    new google.maps.LatLng(47.777842, -100.409501),
-    new google.maps.LatLng(47.777334, -100.410181),
-    new google.maps.LatLng(47.776809, -100.410836),
-    new google.maps.LatLng(47.776240, -100.411514),
-    new google.maps.LatLng(47.775725, -100.412145),
-    new google.maps.LatLng(47.775190, -100.412805),
-    new google.maps.LatLng(47.774672, -100.413464),
-    new google.maps.LatLng(47.774084, -100.414186),
-    new google.maps.LatLng(47.773533, -100.413636),
-    new google.maps.LatLng(47.773021, -100.413009),
-    new google.maps.LatLng(47.772501, -100.412371),
-    new google.maps.LatLng(47.771964, -100.411681),
-    new google.maps.LatLng(47.771479, -100.411078),
-    new google.maps.LatLng(47.770992, -100.410477),
-    new google.maps.LatLng(47.770467, -100.409801),
-    new google.maps.LatLng(47.770090, -100.408904),
-    new google.maps.LatLng(47.769657, -100.408103),
-    new google.maps.LatLng(47.769132, -100.407276),
-    new google.maps.LatLng(47.768564, -100.406469),
-    new google.maps.LatLng(47.767980, -100.405745),
-    new google.maps.LatLng(47.767380, -100.405299),
-    new google.maps.LatLng(47.766604, -100.405297),
-    new google.maps.LatLng(47.765838, -100.405200),
-    new google.maps.LatLng(47.765139, -100.405139),
-    new google.maps.LatLng(47.764457, -100.405094),
-    new google.maps.LatLng(47.763716, -100.405142),
-    new google.maps.LatLng(47.762932, -100.405398),
-    new google.maps.LatLng(47.762126, -100.405813),
-    new google.maps.LatLng(47.761344, -100.406215),
-    new google.maps.LatLng(47.760556, -100.406495),
-    new google.maps.LatLng(47.759732, -100.406484),
-    new google.maps.LatLng(47.758910, -100.406228),
-    new google.maps.LatLng(47.758182, -100.405695),
-    new google.maps.LatLng(47.757676, -100.405118),
-    new google.maps.LatLng(47.757039, -100.404346),
-    new google.maps.LatLng(47.756335, -100.403719),
-    new google.maps.LatLng(47.755503, -100.403406),
-    new google.maps.LatLng(47.754665, -100.403242),
-    new google.maps.LatLng(47.753837, -100.403172),
-    new google.maps.LatLng(47.752986, -100.403112),
-    new google.maps.LatLng(47.751266, -100.403355)
-  ];
-}
+		<div class="row mt centered">
+			<div class="col-lg-4 col-lg-offset-4">
+    			<button type="button" class="btn btn-theme btn-lg">VIEW OUR PORTFOLIO</button>
+			</div>
+		</div><!-- /row -->
+	</div><!-- /container -->
 
-    </script>
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?libraries=visualization&callback=initMap">
-    </script>
+	<! ========== BRANDS & CLIENTS =============================================================================================== 
+	=============================================================================================================================>    
+	<div id="grey">
+		<div class="container">
+			<div class="row mt centered ">
+				<div class="col-lg-4 col-lg-offset-4">
+					<h3>Brands & Clients</h3>
+					<hr>
+				</div><!-- /col-lg-4 -->
+			</div><!-- /row -->
+			
+			<div class="row centered">
+				<div class="col-lg-3 pt">
+					<img class="img-responsive" src="assets/img/clients/client01.png" alt="">
+				</div>
+				<div class="col-lg-3 pt">
+					<img class="img-responsive" src="assets/img/clients/client02.png" alt="">
+				</div>
+				<div class="col-lg-3 pt">
+					<img class="img-responsive" src="assets/img/clients/client03.png" alt="">
+				</div>
+				<div class="col-lg-3 pt">
+					<img class="img-responsive" src="assets/img/clients/client04.png" alt="">
+				</div>
+
+			</div><!-- /row -->
+		</div><!-- /container -->
+	</div><!-- /grey -->
+
+	
+	<! ========== BLACK SECTION ================================================================================================= 
+	=============================================================================================================================>    
+	<div id="black">
+		<div class="container">
+			<div class="row mt centered">
+				<div class="col-lg-4 col-lg-offset-4">
+					<h3>Our Work Process</h3>
+					<hr>
+				</div><!-- /col-lg-4 -->
+			</div><!-- /row -->
+			
+			<div class="row mt">
+				<div class="col-lg-8 col-lg-offset-2">
+					<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+				</div><! --/col-lg-8 -->
+			</div><!-- /row -->
+		</div><!-- /container -->
+	</div><!-- /black -->
+
+
+	<! ========== FEATURED ICONS ================================================================================================ 
+	=============================================================================================================================>    
+    <div id="white">
+	    <div class="container">
+	    	<div class="row mt">
+	    		<div class="col-lg-4 col-lg-offset-4 centered">
+	    			<h3>Different Stages</h3>
+	    			<hr>
+	    		</div>
+	    	</div>
+	    	<div class="row mt">
+	    		<div class="col-lg-3">
+	    			<p class="capitalize">1</p>
+	    			<h4>Brief</h4>
+	    			<p>Built for all levels of expertise, whether you need simple pages or complex ones, creating something incredible with Marco is an effortless and intuitive process.</p>
+	    		</div>
+	    		<div class="col-lg-3">
+	    			<p class="capitalize">2</p>
+	    			<h4>Analysis</h4>
+	    			<p>We’ve taken great care to ensure that Marco is fully retina-ready. So it’ll look good on any retina display. We use retina.js to ensure the best view.</p>
+	    		</div>
+	    		<div class="col-lg-3">
+	    			<p class="capitalize">3</p>
+	    			<h4>Planning</h4>
+	    			<p>Marco fits any device handsomely. We tested our theme in major devices and browsers. Check it out and test it before buy it on responsinator.com.</p>
+	    		</div>    	
+	
+	    		<div class="col-lg-3">
+	    			<p class="capitalize">4</p>
+	    			<h4>Execution</h4>
+	    			<p>Good looking animations are an essential part of the new theme design trend. We add animations.css, a cool script to help you enhance your site with style.</p>
+	    		</div>
+	    	</div><!-- /row -->
+	    </div><!-- /container -->
+    </div><!-- /white -->
+
+	<! ========== CALL TO ACTION 2 ============================================================================================== 
+	=============================================================================================================================>    
+    <div id="cta02">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-lg-8 col-lg-offset-2">
+    				<h2>Our products & services are crafted with the utmost care to fulfill your needs.</h2>
+    				<button type="button" class="btn btn-cta btn-lg">LEARN MORE</button>
+    			</div>
+    		</div><!-- /row -->
+    	</div><!-- /container -->
+    </div><! --/cta02 -->
+
+	<! ========== FEATURED ICONS ================================================================================================ 
+	=============================================================================================================================>    
+    <div class="container">
+    	<div class="row mt">
+    		<div class="col-lg-4 centered si">
+    			<i class="fa fa-flask"></i>
+    			<h4>Built with Bootstrap 3</h4>
+    			<p>Built for all levels of expertise, whether you need simple pages or complex ones, creating something incredible with Marco is an effortless and intuitive process.</p>
+    		</div>
+    		<div class="col-lg-4 centered si">
+    			<i class="fa fa-eye"></i>
+    			<h4>Retina Display Theme</h4>
+    			<p>We’ve taken great care to ensure that Marco is fully retina-ready. So it’ll look good on any retina display. We use retina.js to ensure the best view.</p>
+    		</div>
+    		<div class="col-lg-4 centered si">
+    			<i class="fa fa-mobile"></i>
+    			<h4>Responsive Design Always</h4>
+    			<p>Marco fits any device handsomely. We tested our theme in major devices and browsers. Check it out and test it before buy it on responsinator.com.</p>
+    		</div>    	
+
+    		<div class="col-lg-4 centered si">
+    			<i class="fa fa-cog"></i>
+    			<h4>Really Nice Animations</h4>
+    			<p>Good looking animations are an essential part of the new theme design trend. We add animations.css, a cool script to help you enhance your site with style.</p>
+    		</div>
+    		<div class="col-lg-4 centered si">
+    			<i class="fa fa-flag"></i>
+    			<h4>Font Awesome Included</h4>
+    			<p>Font Awesome is the most used icon font on Bootstrap. Gives you scalable vector icons that can instantly be customized with the power of CSS.</p>
+    		</div>
+    		<div class="col-lg-4 centered si">
+    			<i class="fa fa-heart"></i>
+    			<h4>Carefully Crafted</h4>
+    			<p>We aim to design both, functional & beautiful themes. Details are an important part of our main concept. We work hard to keep our code and front-end flawless.</p>
+    		</div>    	
+    	</div><!-- /row -->
+    </div><!-- /container -->
+    
+	<! ========== OUR TEAM ====================================================================================================== 
+	=============================================================================================================================>    
+	
+	<div id="white">
+		<div class="container">
+	    	<div class="row mt">
+	    		<div class="col-lg-4 col-lg-offset-4 centered">
+	    			<h3>Our Team</h3>
+	    			<hr>
+	    		</div>
+	    	</div><! --/row -->
+			
+			<div class="row">
+				<div class="col-lg-4 centered">
+					<div class="members">
+					  <img src="assets/img/team/gianni.png" alt="">
+					  <div class="team-info">
+					    <div class="subhead">Developer</div>
+					    <h2 class="team-name">Gianni</h2>
+					    <p class="team-description"><i class="fa fa-facebook"></i><i class="fa fa-twitter"></i><i class="fa fa-dribbble"></i></p>
+					  </div>
+					</div>
+				</div><!-- /col-lg-4 -->
+				
+				<div class="col-lg-4 centered">
+					<div class="members">
+					  <img src="assets/img/team/rebecca.png" alt="">
+					  <div class="team-info">
+					    <div class="subhead">Designer</div>
+					    <h2 class="team-name">Rebecca</h2>
+					    <p class="team-description"><i class="fa fa-facebook"></i><i class="fa fa-twitter"></i><i class="fa fa-dribbble"></i></p>
+					  </div>
+					</div>
+				</div><!-- /col-lg-4 -->
+				
+				<div class="col-lg-4 centered">
+					<div class="members">
+					  <img src="assets/img/team/william.png" alt="">
+					  <div class="team-info">
+					    <div class="subhead">Designer</div>
+					    <h2 class="team-name">William</h2>
+					    <p class="team-description"><i class="fa fa-facebook"></i><i class="fa fa-twitter"></i><i class="fa fa-dribbble"></i></p>
+					  </div>
+					</div>
+				</div><!-- /col-lg-4 -->
+
+			</div><! --/row -->	
+		</div><! --/container -->
+	</div><! --/white -->
+	
+	<! ========== BLACK SECTION ================================================================================================= 
+	=============================================================================================================================>    
+	<div id="black">
+		<div class="container pt">
+			<div class="row mt centered">
+				<div class="col-lg-3">
+					<p><i class="fa fa-instagram"></i></p>
+					<h1>21.337</h1>
+					<hr>
+					<h4>Pictures Taken</h4>
+				</div>
+
+				<div class="col-lg-3">
+					<p><i class="fa fa-music"></i></p>
+					<h1>9.764</h1>
+					<hr>
+					<h4>Songs Listened</h4>
+				</div>
+
+				<div class="col-lg-3">
+					<p><i class="fa fa-trophy"></i></p>
+					<h1>107</h1>
+					<hr>
+					<h4>Awards Earned</h4>
+				</div>
+
+				<div class="col-lg-3">
+					<p><i class="fa fa-ticket"></i></p>
+					<h1>209</h1>
+					<hr>
+					<h4>Movies Watched</h4>
+				</div>
+
+			</div><!-- /row -->
+		</div><!-- /container -->
+	</div><!-- /black -->
+
+	<! ========== TESTIMONIAL CAROUSEL ========================================================================================== 
+	=============================================================================================================================>    
+
+	<div class="container">
+    	<div class="row mt">
+    		<div class="col-lg-4 col-lg-offset-4 centered">
+    			<h3>Honest Testimonials</h3>
+    			<hr>
+    		</div>
+    	</div><! --/row -->
+	
+		<div class="row mt">
+			<div class="col-lg-8 col-lg-offset-2 centered">
+				<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">				
+					<!-- Wrapper for slides -->
+					<div class="carousel-inner">
+						<div class="item active">
+						  <h2>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</h2>
+						  <h5>Paul Morrison - BlackTie.co</h5>
+						</div>
+						
+						<div class="item">
+						  <h2>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</h2>
+						  <h5>Mike Wellington - BlackTie.co</h5>
+						</div>
+					</div><!-- /carousel-inner -->
+				
+				</div><! --/carousel-example -->		
+			</div><!-- /col-lg-8 -->
+		</div><! --/row -->
+	</div><!-- /container -->
+
+
+	<! ========== CONTACT SECTION =============================================================================================== 
+	=============================================================================================================================>    
+
+	<div id="white">
+		<div class="container">
+	    	<div class="row mt">
+	    		<div class="col-lg-4 col-lg-offset-4 centered">
+	    			<h3>Contact Us</h3>
+	    			<hr>
+	    		</div>
+	    	</div><! --/row -->
+		</div><!-- /container -->
+	<div id="map"></div>	
+	</div><!-- /white -->
+
+
+
+	
+	<! ========== CALL TO ACTION BAR =============================================================================================== 
+	=============================================================================================================================>    
+	<div id="cta-bar">
+		<div class="container">
+			<div class="row centered">
+				<a href="#"><h4>Are You Ready For The Next Step?</h4></a>
+			</div>
+		</div><!-- /container -->
+	</div><!-- /cta-bar -->
+	
+	<! ========== FOOTER ======================================================================================================== 
+	=============================================================================================================================>    
+	
+	<div id="f">
+		<div class="container">
+			<div class="row">
+				<!-- ADDRESS -->
+				<div class="col-lg-3">
+					<h4>Our Studio</h4>
+					<p>
+						Some Ave. 987,<br/>
+						Postal 64733<br/>
+						London, UK.<br/>
+					</p>
+					<p>
+						<i class="fa fa-mobile"></i> +55 4893.8943<br/>
+						<i class="fa fa-envelope-o"></i> hello@yourdomain.com
+					</p>
+				</div><! --/col-lg-3 -->
+				
+				<!-- TWEETS -->
+				<div class="col-lg-3">
+					<h4>Recent Tweets</h4>
+					<div id="showtweets"></div>
+						<script>
+							twitterFetcher.fetch('258157205101088768', 'showtweets', 2, true, false, false, '', false, handleTweets, false);
+							
+							function handleTweets(tweets){
+							    var x = tweets.length;
+							    var n = 0;
+							    var element = document.getElementById('showtweets');
+							    var html = '<ul>';
+							    while(n < x) {
+							      html += '<li>' + tweets[n] + '</li>';
+							      n++;
+							    }
+							    html += '</ul>';
+							    element.innerHTML = html;
+							}					
+						</script>
+					<p>Follow us <b>@Alvrz_is</b></p>
+				</div><!-- /col-lg-3 -->
+				
+				<!-- LATEST POSTS -->
+				<div class="col-lg-3">
+					<h4>Latest Posts</h4>
+					<p>
+						<i class="fa fa-angle-right"></i> A post with an image<br/>
+						<i class="fa fa-angle-right"></i> Other post with a video<br/>
+						<i class="fa fa-angle-right"></i> A full width post<br/>
+						<i class="fa fa-angle-right"></i> We talk about something nice<br/>
+						<i class="fa fa-angle-right"></i> Yet another single post<br/>
+					</p>
+				</div><!-- /col-lg-3 -->
+				
+				<!-- NEW PROJECT -->
+				<div class="col-lg-3">
+					<h4>New Project</h4>
+					<a href="#"><img class="img-responsive" src="assets/img/portfolio/port03.jpg" alt="" /></a>
+				</div><!-- /col-lg-3 -->
+				
+				
+			</div><! --/row -->
+		</div><!-- /container -->
+	</div><!-- /f -->
+	
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/retina.js"></script>
+
+
+  	<script>
+		$(window).scroll(function() {
+			$('.si').each(function(){
+			var imagePos = $(this).offset().top;
+	
+			var topOfWindow = $(window).scrollTop();
+				if (imagePos < topOfWindow+400) {
+					$(this).addClass("slideUp");
+				}
+			});
+		});
+	</script>    
+
+
+
+  
   </body>
 </html>
-

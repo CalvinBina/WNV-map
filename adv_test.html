@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2011 Google Inc. All Rights Reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>Fusion Tables API Example: Advanced Visualization</title>
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript"
+        src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    <link href="/apis/fusiontables/docs/samples/style/default.css"
+        rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" type="text/css" href="adv_test.css" />
+
+    <script type="text/javascript" src="vars.js"></script>
+
+    <script type="text/javascript">
+      google.load('visualization', '1', { packages: ['corechart'] });
+
+      function initialize() {
+        var year = '2015';
+        var species = 'tmale';
+
+        // Set up map
+        google.maps.visualRefresh = true;
+        var map = new google.maps.Map(document.getElementById('map-canvas'), {
+          center: new google.maps.LatLng(47.75302099252042, -99.19016706835941),
+          zoom: 6,
+          scrollwheel: false,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          zoomControlOptions: {
+            style: google.maps.ZoomControlStyle.SMALL
+          },
+        });
+
+        // Set up fusion tables layer
+        var layer = new google.maps.FusionTablesLayer();
+        updateLayerQuery(layer, year);
+        layer.setMap(map);
+
+        // Create legend, style the polygons, draw charts
+        createLegend(map, year, species);
+        styleLayerBySpecies(layer, year, species);
+        styleMap(map);
+        updateVis();
+
+        google.maps.event.addListener(layer, 'click', function(e) {
+          // Update the graph
+          var county = e.row['Counties'].value;
+          var county_element = document.getElementById('countyOne');
+          county_element.value = county;
+          updateVis();
+
+          // do an synchronous call to get location data
+          var sql = "SELECT " + species + ", Location FROM 1ERyLhkU4tx1_bbaU_7_z0Lh5XELJw2xUa1IeD3uD WHERE Counties = '" + county + "' AND Data = 'Location' AND Year = '" + year + "'";
+          var key = "AIzaSyBE0auVG-OhNhm6ySNuftYtZUEAfIakxHU";
+          sql = encodeURIComponent(sql);
+          sql = sql.replace(/'/g, "%27");
+          var built_url = "https://www.googleapis.com/fusiontables/v2/query?sql=" + sql + "&key=" + key;
+          var window_html = "";
+          $.ajax({ 
+             type: "GET",
+             async: false,
+             success: function(result) {
+                var built_html = "";
+                for (row in result.rows) {
+                    built_html = built_html + "<p>" + result.rows[row][1] + ": " + result.rows[row][0] + "</p>";
+                }
+                window_html = built_html;
+             },
+             url: built_url
+          });
+
+          // Apply location data html to popup window
+          e.infoWindowHtml = window_html;
+        });
+
+        google.maps.event.addDomListener(document.getElementById('year'),
+            'change', function() {
+              year = this.value;
+              updateLayerQuery(layer, year);
+              styleLayerBySpecies(layer, year, species);
+              updateLegend(year, species);
+            });
+
+        google.maps.event.addDomListener(document.getElementById('countyOne'),
+            'change', function() {
+              var county = this.value;
+              updateLayerQuery(layer, year);
+              updateVis();
+            });
+
+        google.maps.event.addDomListener(document.getElementById('countyTwo'),
+            'change', function() {
+              var county = this.value;
+              updateLayerQuery(layer, year);
+              updateVis();
+            });
+
+        google.maps.event.addDomListener(document.getElementById('countyThree'),
+            'change', function() {
+              var county = this.value;
+              updateLayerQuery(layer, year);
+              updateVis();
+            });
+
+        google.maps.event.addDomListener(document.getElementById('species'),
+            'change', function() {
+              species = this.value;
+              styleLayerBySpecies(layer, year, species);
+              updateLegend(year, species);
+              updateVis();
+            });
+
+        google.maps.event.addDomListener(document.getElementById('entire_state'),
+                'change', function() {
+                    updateLayerQuery(layer, year);
+                });
+      }
+
+      function updateLayerQuery(layer, year) {
+// and col0\x3e\x3e0 in (\x27Adams\x27, \x27Barnes\x27, \x27Benson\x27)
+        var where = "col13\x3e\x3e0 \x3d \x27Jan 1, " + year + "\x27 and col14\x3e\x3e0 \x3d \x27Total\x27";
+        var checked = document.getElementById('entire_state').checked;
+        if (!checked) {
+            var county1 = document.getElementById('countyOne').value;
+            var county2 = document.getElementById('countyTwo').value;
+            var county3 = document.getElementById('countyThree').value;
+            where = where + "and col0\x3e\x3e0 in (\x27" + county1 + "\x27, \x27" + county2 + "\x27, \x27" + county3 + "\x27)";
+        }
+        layer.setOptions({
+          query: {
+            select: 'geometry',
+            from: '1ERyLhkU4tx1_bbaU_7_z0Lh5XELJw2xUa1IeD3uD',
+            where: where
+          }
+        });
+        // synchronous call to update max values for styling
+          var sql = "SELECT MAXIMUM(tmale), MAXIMUM(Anopheles), MAXIMUM(Aedes), MAXIMUM(Aedes_vexans), MAXIMUM(Culex), MAXIMUM(Culex_Tarsalis), MAXIMUM(Culex_salinarius), MAXIMUM(Culiseta), MAXIMUM(Other), MAXIMUM(tfemale), MAXIMUM(Total_Mosquitoes) FROM 1ERyLhkU4tx1_bbaU_7_z0Lh5XELJw2xUa1IeD3uD WHERE Data = 'Total' AND Year = 'Jan 1, " + year + "'";
+          var key = "AIzaSyBE0auVG-OhNhm6ySNuftYtZUEAfIakxHU";
+          sql = encodeURIComponent(sql);
+          sql = sql.replace(/'/g, "%27");
+          var built_url = "https://www.googleapis.com/fusiontables/v2/query?sql=" + sql + "&key=" + key;
+          $.ajax({ 
+             type: "GET",
+             async: false,
+             success: function(result) {
+                var count = 0;
+                for (max in result.rows[0]) {
+                    var col_name = result.columns[count].replace("MAXIMUM(","").replace(")","");
+                    LAYER_STYLES[col_name].max = parseInt(result.rows[0][max]) + 1;
+                    count = count + 1;
+                }
+             },
+             url: built_url
+          });
+      }
+
+      function createLegend(map, year, species) {
+        var legendWrapper = document.createElement('div');
+        legendWrapper.id = 'legendWrapper';
+        legendWrapper.index = 1;
+        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legendWrapper);
+        legendContent(legendWrapper, year, species);
+      }
+
+      function legendContent(legendWrapper, year, species) {
+        var legend = document.createElement('div');
+        legend.id = 'legend';
+
+        var title = document.createElement('p');
+        var species_tag = document.getElementById('species');
+        var species_text = species_tag.options[species_tag.selectedIndex].text;
+        title.innerHTML = year + ' ' + species_text + ' Trap Counts';
+        legend.appendChild(title);
+
+        var layerStyle = LAYER_STYLES[species];
+        var colors = layerStyle.colors;
+        var minNum = layerStyle.min;
+        var maxNum = layerStyle.max;
+        var step = Math.floor((maxNum - minNum) / colors.length) + 1;
+        for (var i = 0; i < colors.length; i++) {
+          var legendItem = document.createElement('div');
+
+          var color = document.createElement('div');
+          color.setAttribute('class', 'color');
+          color.style.backgroundColor = colors[i];
+          color.style.opacity = 0.8;
+          legendItem.appendChild(color);
+
+          var newMin = minNum + step * i;
+          var newMax = newMin + step;
+          var minMax = document.createElement('span');
+          minMax.innerHTML = newMin + ' - ' + newMax;
+          legendItem.appendChild(minMax);
+
+          legend.appendChild(legendItem);
+        }
+
+        legendWrapper.appendChild(legend);
+      }
+
+      function updateLegend(year, species) {
+        var legendWrapper = document.getElementById('legendWrapper');
+        var legend = document.getElementById('legend');
+        legendWrapper.removeChild(legend);
+        legendContent(legendWrapper, year, species);
+      }
+
+      function styleLayerBySpecies(layer, year, species) {
+        var layerStyle = LAYER_STYLES[species];
+        var colors = layerStyle.colors;
+        var minNum = layerStyle.min;
+        var maxNum = layerStyle.max;
+        var step = (maxNum - minNum) / colors.length;
+
+        var styles = new Array();
+        for (var i = 0; i < colors.length; i++) {
+          var newMin = minNum + step * i;
+          styles.push({
+            where: generateWhere(newMin, year, species),
+            polygonOptions: {
+              fillColor: colors[i],
+              fillOpacity: 0.6
+            }
+          });
+        }
+        layer.set('styles', styles);
+      }
+
+      function generateWhere(minNum, year, species) {
+        var whereClause = new Array();
+        whereClause.push("Year = 'Jan 1, ");
+        whereClause.push(year);
+        whereClause.push("' AND '");
+        whereClause.push(species);
+        whereClause.push("' >= ");
+        whereClause.push(minNum);
+        return whereClause.join('');
+      }
+
+      function styleMap(map) {
+        var style = [{
+          featureType: 'all',
+          stylers: [{
+            saturation: -99
+          }]
+        }, {
+          featureType: 'poi',
+          stylers: [{
+            visibility: 'off'
+          }]
+        }, {
+          featureType: 'road',
+          stylers: [{
+            visibility: 'off'
+          }]
+        }];
+
+        var styledMapType = new google.maps.StyledMapType(style, {
+          map: map,
+          name: 'Styled Map'
+        });
+        map.mapTypes.set('map-style', styledMapType);
+        map.setMapTypeId('map-style');
+      }
+
+      function drawVisualization(county, species, container) {
+          var sql = "SELECT " + species + ", Year FROM 1ERyLhkU4tx1_bbaU_7_z0Lh5XELJw2xUa1IeD3uD WHERE Counties = '" + county + "' AND Data = 'Total'";
+          var key = "AIzaSyBE0auVG-OhNhm6ySNuftYtZUEAfIakxHU";
+          sql = encodeURIComponent(sql);
+          sql = sql.replace(/'/g, "%27");
+          var built_url = "https://www.googleapis.com/fusiontables/v2/query?sql=" + sql + "&key=" + key;
+
+              $.ajax({ 
+                 type: "GET",
+                 success: function(result) {
+                    drawChart(result, container);
+                 },
+                 url: built_url
+            });
+      }
+
+      function drawChart(json, container) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Year');
+        data.addColumn('number', 'Trap Counts');
+        var row = 0;
+        var indx = 0;
+        for (row in json.rows) {
+            indx = data.addRow();
+            data.setCell(indx, 0, json.rows[row][1]);
+            data.setCell(indx, 1, json.rows[row][0]);
+        }
+        if (container == "visualization1") {
+            var county = document.getElementById('countyOne').value;
+        } else if (container == "visualization2") {
+            var county = document.getElementById('countyTwo').value;
+        } else {
+            var county = document.getElementById('countyThree').value;
+        }
+        var species_tag = document.getElementById('species');
+        var species_text = species_tag.options[species_tag.selectedIndex].text;
+        var title = county + " " + species_text + " Trap Counts by Year";
+        google.visualization.drawChart({
+          containerId: container,
+          dataTable: data,
+          chartType: "ColumnChart",
+          options: {
+            legend: 'none',
+            title: title,
+            height: 340,
+            width: 400
+          }
+        });
+      }
+
+function updateVis() {
+    var targets = ["visualization1", "visualization2", "visualization3"];
+    var elements = ["countyOne", "countyTwo", "countyThree"];
+    for (i = 0; i < targets.length; i++) {
+        var county = document.getElementById(elements[i]).value;
+        var species = document.getElementById("species").value;
+        drawVisualization(county, species, targets[i]);
+    }
+}
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div>
+        <div id="map-canvas"></div>
+        <form id="options">
+            <div class="optn_div">
+              <label class="optn_name">Year</label>
+              <select id="year">
+                <option value="2015">2015</option>
+                <option value="2014">2014</option>
+                <option value="2013">2013</option>
+                <option value="2012">2012</option>
+                <option value="2011">2011</option>
+                <option value="2010">2010</option>
+                <option value="2009">2009</option>
+                <option value="2008">2008</option>
+                <option value="2007">2007</option>
+                <option value="2006">2006</option>
+              </select>
+          </div>
+          <div class="optn_div">
+              <label class="optn_name">Species</label>
+              <select id="species">
+                  <option value="tmale">Total Male</option>
+                  <option value="tfemale">Total Female</option>
+                  <option value="Culiseta">Culiseta</option>
+                  <option value="Anopheles">Anopheles</option>
+                  <option value="Aedes">Aedes</option>
+                  <option value="Aedes_vexans">Aedes Vexans</option>
+                  <option value="Culex">Culex</option>
+                  <option value="Culex_Tarsalis">Culex Tarsalis</option>
+                  <option value="Culex_salinarius">Culex Salinarius</option>
+                  <option value="Other">Other</option>
+              </select>
+          </div>
+          <div class="optn_div">
+              <label class="optn_name">Display entire state</label>
+              <input type="checkbox" id="entire_state" value="checked" />
+        </form>
+    </div>
+    <div id="county_holder">
+          <div class="col-lg-4">
+              <label>County One:</label>
+              <select id="countyOne">
+                <option value="Cass">Cass</option>
+                <option value="Burleigh">Burleigh</option>
+                <option value="Grand Forks">Grand Forks</option>
+                <option value="Ward">Ward</option>
+                <option value="Williams">Williams</option>
+                <option value="Stark">Stark</option>
+                <option value="Morton">Morton</option>
+                <option value="Stutsman">Stutsman</option>
+                <option value="Richland">Richland</option>
+                <option value="Rolette">Rolette</option>
+                <option value="Ramsey">Ramsey</option>
+                <option value="Barnes">Barnes</option>
+                <option value="McKenzie">McKenzie</option>
+                <option value="Walsh">Walsh</option>
+                <option value="Mountrail">Mountrail</option>
+                <option value="McLean">McLean</option>
+                <option value="Mercer">Mercer</option>
+                <option value="Traill">Traill</option>
+                <option value="Pembina">Pembina</option>
+                <option value="Benson">Benson</option>
+                <option value="Bottineau">Bottineau</option>
+                <option value="McHenry">McHenry</option>
+                <option value="Ransom">Ransom</option>
+                <option value="Dickey">Dickey</option>
+                <option value="Sioux">Sioux</option>
+                <option value="Pierce">Pierce</option>
+                <option value="Dunn">Dunn</option>
+                <option value="Wells">Wells</option>
+                <option value="LaMoure">LaMoure</option>
+                <option value="Sargent">Sargent</option>
+                <option value="Cavalier">Cavalier</option>
+                <option value="Emmons">Emmons</option>
+                <option value="Foster">Foster</option>
+                <option value="Bowman">Bowman</option>
+                <option value="Nelson">Nelson</option>
+                <option value="McIntosh">McIntosh</option>
+                <option value="Hettinger">Hettinger</option>
+                <option value="Renville">Renville</option>
+                <option value="Divide">Divide</option>
+                <option value="Kidder">Kidder</option>
+                <option value="Adams">Adams</option>
+                <option value="Eddy">Eddy</option>
+                <option value="Grant">Grant</option>
+                <option value="Griggs">Griggs</option>
+                <option value="Towner">Towner</option>
+                <option value="Burke">Burke</option>
+                <option value="Steele">Steele</option>
+                <option value="Logan">Logan</option>
+                <option value="Oliver">Oliver</option>
+                <option value="Golden Valley">Golden Valley</option>
+                <option value="Sheridan">Sheridan</option>
+                <option value="Billings">Billings</option>
+                <option value="Slope">Slope</option>
+              </select>
+          </div>
+          <div class="col-lg-4">
+              <label>County Two:</label>
+              <select id="countyTwo">
+                <option value="Cass">Cass</option>
+                <option value="Burleigh">Burleigh</option>
+                <option value="Grand Forks">Grand Forks</option>
+                <option value="Ward">Ward</option>
+                <option value="Williams">Williams</option>
+                <option value="Stark">Stark</option>
+                <option value="Morton">Morton</option>
+                <option value="Stutsman">Stutsman</option>
+                <option value="Richland">Richland</option>
+                <option value="Rolette">Rolette</option>
+                <option value="Ramsey">Ramsey</option>
+                <option value="Barnes">Barnes</option>
+                <option value="McKenzie">McKenzie</option>
+                <option value="Walsh">Walsh</option>
+                <option value="Mountrail">Mountrail</option>
+                <option value="McLean">McLean</option>
+                <option value="Mercer">Mercer</option>
+                <option value="Traill">Traill</option>
+                <option value="Pembina">Pembina</option>
+                <option value="Benson">Benson</option>
+                <option value="Bottineau">Bottineau</option>
+                <option value="McHenry">McHenry</option>
+                <option value="Ransom">Ransom</option>
+                <option value="Dickey">Dickey</option>
+                <option value="Sioux">Sioux</option>
+                <option value="Pierce">Pierce</option>
+                <option value="Dunn">Dunn</option>
+                <option value="Wells">Wells</option>
+                <option value="LaMoure">LaMoure</option>
+                <option value="Sargent">Sargent</option>
+                <option value="Cavalier">Cavalier</option>
+                <option value="Emmons">Emmons</option>
+                <option value="Foster">Foster</option>
+                <option value="Bowman">Bowman</option>
+                <option value="Nelson">Nelson</option>
+                <option value="McIntosh">McIntosh</option>
+                <option value="Hettinger">Hettinger</option>
+                <option value="Renville">Renville</option>
+                <option value="Divide">Divide</option>
+                <option value="Kidder">Kidder</option>
+                <option value="Adams">Adams</option>
+                <option value="Eddy">Eddy</option>
+                <option value="Grant">Grant</option>
+                <option value="Griggs">Griggs</option>
+                <option value="Towner">Towner</option>
+                <option value="Burke">Burke</option>
+                <option value="Steele">Steele</option>
+                <option value="Logan">Logan</option>
+                <option value="Oliver">Oliver</option>
+                <option value="Golden Valley">Golden Valley</option>
+                <option value="Sheridan">Sheridan</option>
+                <option value="Billings">Billings</option>
+                <option value="Slope">Slope</option>
+              </select>
+          </div>
+          <div class="col-lg-4">
+              <label>County Three:</label>
+              <select id="countyThree">
+                <option value="Cass">Cass</option>
+                <option value="Burleigh">Burleigh</option>
+                <option value="Grand Forks">Grand Forks</option>
+                <option value="Ward">Ward</option>
+                <option value="Williams">Williams</option>
+                <option value="Stark">Stark</option>
+                <option value="Morton">Morton</option>
+                <option value="Stutsman">Stutsman</option>
+                <option value="Richland">Richland</option>
+                <option value="Rolette">Rolette</option>
+                <option value="Ramsey">Ramsey</option>
+                <option value="Barnes">Barnes</option>
+                <option value="McKenzie">McKenzie</option>
+                <option value="Walsh">Walsh</option>
+                <option value="Mountrail">Mountrail</option>
+                <option value="McLean">McLean</option>
+                <option value="Mercer">Mercer</option>
+                <option value="Traill">Traill</option>
+                <option value="Pembina">Pembina</option>
+                <option value="Benson">Benson</option>
+                <option value="Bottineau">Bottineau</option>
+                <option value="McHenry">McHenry</option>
+                <option value="Ransom">Ransom</option>
+                <option value="Dickey">Dickey</option>
+                <option value="Sioux">Sioux</option>
+                <option value="Pierce">Pierce</option>
+                <option value="Dunn">Dunn</option>
+                <option value="Wells">Wells</option>
+                <option value="LaMoure">LaMoure</option>
+                <option value="Sargent">Sargent</option>
+                <option value="Cavalier">Cavalier</option>
+                <option value="Emmons">Emmons</option>
+                <option value="Foster">Foster</option>
+                <option value="Bowman">Bowman</option>
+                <option value="Nelson">Nelson</option>
+                <option value="McIntosh">McIntosh</option>
+                <option value="Hettinger">Hettinger</option>
+                <option value="Renville">Renville</option>
+                <option value="Divide">Divide</option>
+                <option value="Kidder">Kidder</option>
+                <option value="Adams">Adams</option>
+                <option value="Eddy">Eddy</option>
+                <option value="Grant">Grant</option>
+                <option value="Griggs">Griggs</option>
+                <option value="Towner">Towner</option>
+                <option value="Burke">Burke</option>
+                <option value="Steele">Steele</option>
+                <option value="Logan">Logan</option>
+                <option value="Oliver">Oliver</option>
+                <option value="Golden Valley">Golden Valley</option>
+                <option value="Sheridan">Sheridan</option>
+                <option value="Billings">Billings</option>
+                <option value="Slope">Slope</option>
+              </select>
+          </div>
+        </div>
+  </div>
+    <div>
+        <div class="chart_div" id="visualization1"></div>
+        <div class="chart_div" id="visualization2"></div>
+        <div class="chart_div" id="visualization3"></div>
+    </div>
+  </body>
+</html>

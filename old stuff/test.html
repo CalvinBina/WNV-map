@@ -30,19 +30,11 @@ function initMap() {
       select: 'geometry',
       from: '1icrOUmbV9pS7CltJmBCj-WEKtI1nfRS2w51O-5WS'
     },
-    styles: [{
-      where: '2003 < 15'
-      polygonOptions: {
-        fillColor: '#ff9900',
-        fillOpacity: 0.3
+    options: {
+        styleId: 2,
+        templateId: 2
       }
-    }, {
-      where: '2003 > 15',
-      polygonOptions: {
-        fillColor: '#ffff00'
-      }
-    }]
-  });
+});
 
   layer.setMap(map);
 }
