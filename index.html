@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="assets/ico/favicon.png">
 
-    <title>MARCO - One Page Bootstrap 3 Theme</title>
+    <title>ND West Nile Virus</title>
 
     <link href="assets/css/hover_pack.css" rel="stylesheet">
 
@@ -46,7 +46,11 @@
         // When the window has finished loading create our google map below
         google.maps.event.addDomListener(window, 'load', initialize);
     
+
+
+        // this function does nothing as far as I can tell, the page works without it
         function init() {
+
             // Basic options for a simple Google Map
             // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
             var mapOptions = {
@@ -56,7 +60,7 @@
                 scrollwheel: false,
 
                 // The latitude and longitude to center the map (always required)
-                center: new google.maps.LatLng(40.6700, -73.9400), // New York
+                center: new google.maps.LatLng(40.6700, -73.9400), // North Dakota???
 
                 // How you would like to style the map. 
                 // This is where you would paste any style found on Snazzy Maps.
@@ -69,7 +73,10 @@
 
             // Create the Google Map using out element and options defined above
             var map = new google.maps.Map(mapElement, mapOptions);
+            var year = '2015';
+            var species = 'Culex_Tarsalis';
         }
+
     </script>
     
     
@@ -85,7 +92,9 @@
     <![endif]-->
   </head>
 
-  <body>
+
+
+  <body> <!--BODY OF THE WEBPAGE START HERE-->
 
 
 	<! ========== HEADERWRAP ==================================================================================================== 
@@ -100,6 +109,7 @@
 				</div>
                 -->
 			</div><!-- /row -->
+        <!--FORM SELECTOR LEGEND IN THE TOP RIGHT OF THE MAP FOR YEAR AND SPECIES-->
             <form id="map-options">
                 <div>
                   <label>Year</label>
@@ -115,10 +125,11 @@
                     <option value="2007">2007</option>
                     <option value="2006">2006</option>
                   </select>
-              </div>
+              </div> <!--END DIV FOR YEAR SELECTOR-->
               <div>
                   <label>Species</label>
                   <select id="species">
+                      <option value="Culex_Tarsalis">Culex Tarsalis</option>
                       <option value="tmale">Total Male</option>
                       <option value="tfemale">Total Female</option>
                       <option value="Culiseta">Culiseta</option>
@@ -126,33 +137,38 @@
                       <option value="Aedes">Aedes</option>
                       <option value="Aedes_vexans">Aedes Vexans</option>
                       <option value="Culex">Culex</option>
-                      <option value="Culex_Tarsalis">Culex Tarsalis</option>
                       <option value="Culex_salinarius">Culex Salinarius</option>
                       <option value="Other">Other</option>
                   </select>
-              </div>
+              </div> <!--END DIV FOR SPECIES SELECTOR-->
+                <div>
+                    <label>GIS Parameters</label>
+                    <select id="gis_params"
+                        <option value="Total_Rainfall">Total Rainfall</option>
+                    </select>
+                </div> <!--END DIV FOR RAINFALL SELECTOR-->
               <div>
                   <label>Display entire state</label>
                   <input type="checkbox" id="entire_state" checked="true" />
               </div>
             </form>
     	</div><!-- /container -->
-    </div> <!-- /headerwrap -->
+    </div> <!-- /headerwrap --> 
 
-	<! ========== BLOG POSTS ==================================================================================================== 
+      <! ========== Interactive Charts ==================================================================================================== 
 	=============================================================================================================================>    
 	<div class="container">	
 
 		<div class="row mt centered ">
 			<div class="col-lg-4 col-lg-offset-4">
-				<h3>Charts & Visualizations</h3>
+				<h3>Charts & Visualizations</h3> <!--Title of the "Container" Header thing CHARTS-->
 				<hr>
 			</div>
 		</div><!-- /row -->
 
         <!-- County Options - needs to be cleaned up! -->
         <div class="row mt">
-          <div class="col-lg-4">
+          <div class="col-lg-4"> <!--Creates 3 equal width columns-->
               <label>County One:</label>
               <select id="countyOne">
               </select>
