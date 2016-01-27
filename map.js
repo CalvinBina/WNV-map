@@ -1,6 +1,7 @@
+//Initialize function for google map api-JS
 function initialize() {
     var year = '2015';
-    var species = 'tmale';
+    var species = 'Culex_Tarsalis';
 
     // Populate the counties dropdowns
     var c1_elem = document.getElementById("countyOne");
@@ -46,7 +47,7 @@ function initialize() {
         county_element.value = county;
         updateVis();
 
-        // do an synchronous call to get location data
+        // do a synchronous call to get location data
         var sql = "SELECT " + species + ", Location FROM 1ERyLhkU4tx1_bbaU_7_z0Lh5XELJw2xUa1IeD3uD WHERE Counties = '" + county + "' AND Data = 'Location' AND Year = '" + year + "'";
         var key = "AIzaSyBE0auVG-OhNhm6ySNuftYtZUEAfIakxHU";
         sql = encodeURIComponent(sql);
@@ -69,7 +70,7 @@ function initialize() {
         // Apply location data html to popup window
         e.infoWindowHtml = window_html;
     });
-
+    //This is something to do with loading the google map by element... addDomListener
     google.maps.event.addDomListener(document.getElementById('year'), 'change', function() {
         year = this.value;
         updateLayerQuery(layer, year);
@@ -102,7 +103,7 @@ function initialize() {
     google.maps.event.addDomListener(document.getElementById('entire_state'), 'change', function() {
         updateLayerQuery(layer, year);
     });
-}
+} //End of the initialize function (initializes and reinitializes google map
 
 function updateLayerQuery(layer, year) {
     // Where clause for year and record type
