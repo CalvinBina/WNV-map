@@ -1,6 +1,9 @@
-make the interface look better, and separate the data charts and the data map
-    - DONE
+----NOT DONE------
+Comb data, find WEEKLY trends.... weekly data, weekly GIS to put into a fusion table. 
 
+Add rainfall to the map,.... eventually go get Rainfall weekly/Monthly interactive.
+
+----- NOT DONE (CALVIN'S RECCOMENDATIONS)----
 figure out how to fine grain the data to month
     - just need to rework the scripts
     - need to provide a function that takes the spreadsheets in THAT FORMAT and automatically appends
@@ -16,7 +19,12 @@ fix the synchronous call for clicking the county - works alright for now
 
 explore options for customizing graphs for data
 
-------------------------------------
+-------DONE-----------------------------
+
+
+
+make the interface look better, and separate the data charts and the data map
+    - DONE
 
 switch up options, move county dropdown to graphs - done
 
