@@ -1,3 +1,5 @@
+:warning: Google Fusion Tables are being deprecated on Dec 03, 2019. As of that date, this project will be considered defunct.
+
 # WNV-map
 A repo for the front end of WNV project, the heat map of North Dakota, the greatest state in our beloved nation.
 
